@@ -1,4 +1,4 @@
-package SanctuaryManagement;
+package sanctuarymanagement;
 
 /**
  * An interface to help classes simulate housing.
