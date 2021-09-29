@@ -1,11 +1,9 @@
 package sanctuarymanagement;
 
-import sanctuarymanagement.species.Species;
-
 /**
  * Simulates an animal.
  */
-public interface Animal {
+interface Animal {
 
   /**
    * getter method for id of the animal.
@@ -17,7 +15,7 @@ public interface Animal {
    * getter method for sanctuarymanagement.species of the animal.
    * @return sanctuarymanagement.species of the animal.
    */
-  public Species getSpecies();
+  public Genus getSpecies();
 
   /**
    * getter method for sex of the animal.

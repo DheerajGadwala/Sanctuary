@@ -1,16 +1,14 @@
 package sanctuarymanagement;
 
-import sanctuarymanagement.species.*;
-
 /**
  * This class simulates Primates. Primates are a type of animals.
  *
  */
-public class Primate implements Animal {
+class Primate implements Animal {
 
   private static int count = 0;
   private final int id;
-  private final Species species;
+  private final Genus species;
   private final Sex sex;
   private String name;
   private double weight;
@@ -30,7 +28,7 @@ public class Primate implements Animal {
    * @param favouriteFood favourite food of the primate
    * @param needsMedicalAttention flag, to check if primate needs medical attention
    */
-  public Primate(String name, Species species,
+  public Primate(String name, PrimateGenus species,
                  Sex sex, double weight,
                  double height, int age,
                  Food favouriteFood, boolean needsMedicalAttention) {
@@ -64,7 +62,7 @@ public class Primate implements Animal {
   }
 
   @Override
-  public Species getSpecies() {
+  public Genus getSpecies() {
     return species;
   }
 
@@ -136,5 +134,18 @@ public class Primate implements Animal {
   @Override
   public void setNeedsMedicalAttention(boolean needsMedicalAttention) {
     this.needsMedicalAttention = needsMedicalAttention;
+  }
+
+  @Override
+  public String toString() {
+    String ret = String.format(
+                "species: %s,\n sex: %s,\n name: %s,"
+                + "\n size: %s,\n age: %d,\n weight: %.2f,"
+                + "\n favourite food: %s\n",
+                species.toString(), sex.toString(),name,
+                size.toString(), age, weight,
+                favouriteFood.toString()
+    );
+    return ret;
   }
 }

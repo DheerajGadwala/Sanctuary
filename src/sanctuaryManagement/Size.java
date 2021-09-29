@@ -3,8 +3,19 @@ package sanctuarymanagement;
 /**
  * Different sizes of animals.
  */
-public enum Size {
-  SMALL,
-  MEDIUM,
-  LARGE
+enum Size {
+  SMALL("small"),
+  MEDIUM("medium"),
+  LARGE("large");
+
+  private final String size;
+
+  Size(String size) {
+    this.size = size;
+  }
+
+  @Override
+  public String toString() {
+    return this.size;
+  }
 }
