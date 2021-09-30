@@ -1,21 +1,20 @@
 package sanctuarymanagement;
 
-import javax.naming.LimitExceededException;
-
 /**
  * An interface to help classes simulate housing.
  */
 interface Housing extends Comparable<Housing> {
   /**
-   * adds a primate to the housing.
+   * adds an animal to the housing.
    * @param animal primate object to be added.
    */
-  public void addAnimal(Animal animal) throws LimitExceededException;
+  public void addAnimal(Animal animal) throws IllegalStateException;
 
   /**
-   * removes a primate from the housing.
+   * removes an animal from the housing.
    * @param id unique id of the primate to be removed.
    * @return return the primate object.
    */
-  public Animal removeAnimal(int id) throws IllegalStateException;
+  public Animal removeAnimal(int id) throws IllegalArgumentException;
+
 }

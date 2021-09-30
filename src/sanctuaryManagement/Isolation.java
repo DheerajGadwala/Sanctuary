@@ -2,18 +2,19 @@ package sanctuarymanagement;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
-import javax.naming.LimitExceededException;
 
 /**
  * Isolation is a type of multiple housing.
  * It contains cages, which in turn contain the animals.
- * The capacity of isolation objects can be increases if needed.
+ * The capacity of isolation objects can be increased if needed.
  */
 public class Isolation implements MultipleHousing {
 
   private int capacity;
-  private ArrayList<Cage> cages;
+  private List<Cage> cages;
 
   /**
    * creates an isolation object.
@@ -21,6 +22,7 @@ public class Isolation implements MultipleHousing {
    */
   public Isolation(int capacity) {
     this.capacity = capacity;
+    cages = new ArrayList<>();
     for (int i = 0; i < capacity; i++) {
       cages.add(new Cage());
     }
@@ -51,9 +53,29 @@ public class Isolation implements MultipleHousing {
     }
   }
 
+  /**
+   * looks up a species in this isolation and returns all housing
+   * objects that contain animals of these species.
+   * @param species species to be searched.
+   * @return list of housing objects which have an animal of the given species.
+   */
+  public List<Housing> lookUpSpecies(Genus species) {
+    List<Housing> ret = new ArrayList<>();
+    for (Cage currentCage: cages) {
+      if (currentCage.isOccupied()) {
+        Genus currentSpecies = currentCage.getAnimalSpecies();
+        if (currentSpecies.compareTo(species) == 0) {
+          ret.add(currentCage);
+        }
+      }
+    }
+    Collections.sort(ret);
+    return ret;
+  }
+
   @Override
-  public ArrayList<SpeciesReportUnit> getSpeciesAndHousing() {
-    ArrayList<SpeciesReportUnit> ret = new ArrayList<SpeciesReportUnit>();
+  public List<SpeciesReportUnit> getSpeciesAndHousing() {
+    List<SpeciesReportUnit> ret = new ArrayList<>();
     for (Cage currentCage: cages) {
       if (currentCage.isOccupied()) {
         Animal currentAnimal = currentCage.getAnimal();
@@ -65,8 +87,8 @@ public class Isolation implements MultipleHousing {
   }
 
   @Override
-  public ArrayList<NameReportUnit> getSNameAndHousing() {
-    ArrayList<NameReportUnit> ret = new ArrayList<NameReportUnit>();
+  public List<NameReportUnit> getNameAndHousing() {
+    List<NameReportUnit> ret = new ArrayList<>();
     for (Cage currentCage: cages) {
       if (currentCage.isOccupied()) {
         Animal currentAnimal = currentCage.getAnimal();
@@ -78,8 +100,8 @@ public class Isolation implements MultipleHousing {
   }
 
   @Override
-  public TreeMap<Food, Integer> getShoppingList() {
-    TreeMap<Food, Integer> ret = new TreeMap<Food, Integer>();
+  public Map<Food, Integer> getShoppingList() {
+    Map<Food, Integer> ret = new TreeMap<>();
     for (Food f: Food.values()) {
       ret.put(f, 0);
     }
@@ -88,53 +110,66 @@ public class Isolation implements MultipleHousing {
         Animal currentAnimal = currentCage.getAnimal();
         Size size = currentAnimal.getSize();
         Food favFood = currentAnimal.getFavouriteFood();
-        if (size == Size.LARGE) {
-          ret.put(favFood, ret.get(favFood) + 500);
-        }
-        else if (size == Size.MEDIUM) {
-          ret.put(favFood, ret.get(favFood) + 250);
-        }
-        else {
-          ret.put(favFood, ret.get(favFood) + 100);
-        }
+        int foodRequirement = size == Size.LARGE ? 500 : size == Size.MEDIUM ? 250 : 100;
+        ret.put(favFood, foodRequirement);
       }
     }
     return ret;
   }
 
   @Override
-  public void addAnimal(Animal animal) throws LimitExceededException {
+  public void addAnimal(Animal animal) throws IllegalStateException {
     if (getSpareCapacity() == 0) {
-      throw new LimitExceededException();
+      throw new IllegalStateException("No spare capacity in isolation");
+    }
+    for (Cage currentCage: cages) {
+      if (currentCage.isEmpty()) {
+        currentCage.addAnimal(animal);
+        break;
+      }
     }
   }
 
   @Override
-  public Animal removeAnimal(int id) throws IllegalStateException {
+  public Animal removeAnimal(int id) throws IllegalArgumentException {
     for (Cage currentCage: cages) {
       if (currentCage.isOccupied()) {
-        Animal currentAnimal = currentCage.getAnimal();
-        if (currentAnimal.getId() == id) {
+        if (currentCage.getAnimalId() == id) {
           return currentCage.removeAnimal(id);
         }
       }
     }
-    throw new IllegalStateException("Animal was not found in isolation.");
+    throw new IllegalArgumentException("Animal was not found in isolation.");
+  }
+
+  @Override
+  public Animal getAnimal(int id) throws IllegalArgumentException {
+    for (Cage currentCage: cages) {
+      if (currentCage.isOccupied()) {
+        if (currentCage.getAnimalId() == id) {
+          return currentCage.getAnimal();
+        }
+      }
+    }
+    throw new IllegalArgumentException("Animal not found in isolation");
   }
 
   @Override
   public int compareTo(Housing o) {
-    if (true) {
+    if (o instanceof Enclosure) {
       return -1;
     }
     else if (o instanceof Isolation) {
       return 0;
     }
-    else if (o instanceof Cage) {
+    else {
       return 1;
     }
-    else {
-      return 0;
-    }
+  }
+
+  @Override
+  public String toString() {
+    String ret = String.format("Isolation, capacity: %d", capacity);
+    return ret;
   }
 }

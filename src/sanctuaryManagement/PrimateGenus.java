@@ -7,19 +7,21 @@ package sanctuarymanagement;
 abstract class PrimateGenus implements Genus {
 
   private final String species;
-  private final String genus = "Primates";
+  private final String genus = "Primate";
 
   PrimateGenus(String species) {
     this.species = species;
   }
 
+  @Override
   public String getGenus() {
     return genus;
   }
 
   @Override
   public String toString() {
-    return species;
+    String ret = String.format("%s", species);
+    return ret;
   }
 
   @Override

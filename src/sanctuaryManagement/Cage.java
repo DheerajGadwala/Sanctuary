@@ -56,12 +56,17 @@ public class Cage implements Housing {
     return animal.getId();
   }
 
+  public Genus getAnimalSpecies() {
+    return animal.getSpecies();
+  }
+
   @Override
-  public void addAnimal(Animal animal) throws LimitExceededException {
+  public void addAnimal(Animal animal) throws IllegalStateException {
     if (isEmpty()) {
       this.animal = animal;
+      return;
     }
-    throw new LimitExceededException("A cage can have only one animal.");
+    throw new IllegalStateException("A cage can have only one animal.");
   }
 
   @Override
@@ -71,21 +76,21 @@ public class Cage implements Housing {
       animal = null;
       return temp;
     }
-    throw new IllegalStateException();
+    throw new IllegalStateException("Animal of given id does not exist in this cage.");
   }
 
   @Override
   public int compareTo(Housing o) {
     if (o instanceof Cage) {
-      if (id > ((Cage)o).getId()) {
-        return 1;
-      }
-      else {
-        return -1;
-      }
+      int oId = ((Cage)o).getId();
+      return id > oId ? 1 : id == oId ? 0 : -1;
     }
-    else {
-      return -1;
-    }
+    return -1;
+  }
+
+  @Override
+  public String toString() {
+    String ret = String.format("Cage id:- %d", id);
+    return ret;
   }
 }

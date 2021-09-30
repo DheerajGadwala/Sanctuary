@@ -137,6 +137,11 @@ class Primate implements Animal {
   }
 
   @Override
+  public Group getGroup() {
+    return new Troop();
+  }
+
+  @Override
   public String toString() {
     String ret = String.format(
                 "species: %s,\n sex: %s,\n name: %s,"

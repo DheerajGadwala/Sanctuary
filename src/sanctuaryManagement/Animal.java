@@ -102,4 +102,10 @@ interface Animal {
    *                              medical attention else give false.
    */
   public void setNeedsMedicalAttention(boolean needsMedicalAttention);
+
+  /**
+   * The type of group this animal is associated with.
+   * @return an object of type group.
+   */
+  public Group getGroup();
 }

@@ -43,4 +43,10 @@ public class NameReportUnit implements Comparable<NameReportUnit> {
     }
     return ret;
   }
+
+  @Override
+  public String toString() {
+    String ret = String.format("Name: %s, Housing: %s", name, housing.toString());
+    return ret;
+  }
 }

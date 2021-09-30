@@ -44,4 +44,10 @@ public class SpeciesReportUnit implements Comparable<SpeciesReportUnit> {
       return ret;
     }
   }
+
+  @Override
+  public String toString() {
+    String ret = String.format("Species: %s, Housing: %s", species.toString(), housing.toString());
+    return ret;
+  }
 }
