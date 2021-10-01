@@ -19,8 +19,12 @@ class Isolation implements MultipleHousing {
   /**
    * creates an isolation object.
    * @param capacity number of cages in the isolation.
+   * @throws IllegalArgumentException when capacity is less than zero.
    */
-  public Isolation(int capacity) {
+  public Isolation(int capacity) throws IllegalArgumentException {
+    if (capacity <= 0) {
+      throw new IllegalArgumentException("capacity can not be negative");
+    }
     this.capacity = capacity;
     cages = new ArrayList<>();
     for (int i = 0; i < capacity; i++) {
@@ -93,6 +97,7 @@ class Isolation implements MultipleHousing {
   /**
    * Gives medical attention to an animal.
    * @param animalId id of animal that has received medical attention.
+   * @throws IllegalArgumentException when animal is not found in isolation.
    */
   public void giveMedicalAttention(int animalId) throws IllegalArgumentException {
     try {
@@ -117,6 +122,13 @@ class Isolation implements MultipleHousing {
     return true;
   }
 
+  /**
+   * <b>This method is written for testing purposes.</b>
+   * returns housing of an animal.
+   * @param animalId id of animal whose id is to be returned
+   * @return Housing object of the animal.
+   * @throws IllegalArgumentException when animal is not in isolation
+   */
   public Housing getHousing(int animalId) throws IllegalArgumentException {
     for (Cage k: cages) {
       if (k.isOccupied() && k.getAnimalId() == animalId) {
@@ -168,6 +180,18 @@ class Isolation implements MultipleHousing {
       }
     }
     return ret;
+  }
+
+  @Override
+  public void setNeedsMedicalAttention(int animalId) throws IllegalArgumentException {
+    for (Cage currentCage: cages) {
+      if (currentCage.isOccupied() && currentCage.getAnimalId() == animalId) {
+        Animal currentAnimal = currentCage.getAnimal();
+        currentAnimal.setNeedsMedicalAttention(true);
+        return;
+      }
+    }
+    throw new IllegalArgumentException("animal not found in Isolation");
   }
 
   @Override

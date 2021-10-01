@@ -12,6 +12,7 @@ class Primate implements Animal {
   private final Sex sex;
   private String name;
   private double weight;
+  private double height;
   private Size size;
   private int age;
   private Food favouriteFood;
@@ -20,18 +21,20 @@ class Primate implements Animal {
   /**
    * This a constructor of the Primate class.
    * @param name name of the primate
-   * @param species sanctuarymanagement.species of the primate
+   * @param species species of the primate
    * @param sex sex of the primate
    * @param weight weight of the primate
    * @param height height of the primate
    * @param age age of the primate
    * @param favouriteFood favourite food of the primate
    * @param needsMedicalAttention flag, to check if primate needs medical attention
+   * @throws IllegalArgumentException when invalid arguments are received
    */
   public Primate(String name, PrimateGenus species,
                  Sex sex, double weight,
                  double height, int age,
-                 Food favouriteFood, boolean needsMedicalAttention) {
+                 Food favouriteFood, boolean needsMedicalAttention)
+      throws IllegalArgumentException {
     StringBuilder errorMessage = new StringBuilder("");
     if (name == null || name.equals("")) {
       errorMessage.append("Name can not be empty\n");
@@ -66,6 +69,7 @@ class Primate implements Animal {
     this.name = name;
     this.species = species;
     this.sex = sex;
+    this.height = height;
     this.size = findSize(height);
     this.weight = weight;
     this.age = age;
@@ -99,7 +103,10 @@ class Primate implements Animal {
   }
 
   @Override
-  public void setName(String name) {
+  public void setName(String name) throws IllegalArgumentException {
+    if (name == null || name.equals("")) {
+      throw new IllegalArgumentException("Name can not be empty.");
+    }
     this.name = name;
   }
 
@@ -109,8 +116,21 @@ class Primate implements Animal {
   }
 
   @Override
-  public void setWeight(double newWeight) {
+  public void setWeight(double newWeight) throws IllegalArgumentException {
+    if (weight <= 0) {
+      throw new IllegalArgumentException("Weight can not be non positive.");
+    }
     this.weight = newWeight;
+  }
+
+  @Override
+  public double getHeight() {
+    return height;
+  }
+
+  @Override
+  public void setHeight(double newHeight) throws IllegalArgumentException {
+    height = newHeight;
   }
 
   @Override
@@ -119,12 +139,18 @@ class Primate implements Animal {
   }
 
   @Override
-  public void setSize(double height) {
+  public void setSize(double height) throws IllegalArgumentException {
+    if (height <= 0) {
+      throw new IllegalArgumentException("height can not be non positive.");
+    }
     this.size = findSize(height);
   }
 
   @Override
-  public void setSize(Size newSize) {
+  public void setSize(Size newSize) throws IllegalArgumentException {
+    if (newSize == null) {
+      throw new IllegalArgumentException("size can not be null");
+    }
     this.size = newSize;
   }
 
@@ -134,7 +160,10 @@ class Primate implements Animal {
   }
 
   @Override
-  public void setAge(int newAge) {
+  public void setAge(int newAge)  throws IllegalArgumentException  {
+    if (age < 0) {
+      throw new IllegalArgumentException("age can not be less than zero.");
+    }
     this.age = age;
   }
 
@@ -144,7 +173,10 @@ class Primate implements Animal {
   }
 
   @Override
-  public void setFavouriteFood(Food newFavouriteFood) {
+  public void setFavouriteFood(Food newFavouriteFood) throws IllegalArgumentException {
+    if (newFavouriteFood == null) {
+      throw new IllegalArgumentException("Favourite food can not be null.");
+    }
     this.favouriteFood = newFavouriteFood;
   }
 
@@ -161,6 +193,20 @@ class Primate implements Animal {
   @Override
   public Group getGroup() {
     return new Troop();
+  }
+
+  @Override
+  public Primate shallowCopy() throws IllegalArgumentException {
+    return new Primate(
+        getName(),
+        (PrimateGenus) getSpecies(),
+        getSex(),
+        getWeight(),
+        getHeight(),
+        getAge(),
+        getFavouriteFood(),
+        getNeedsMedicalAttention()
+    );
   }
 
   @Override

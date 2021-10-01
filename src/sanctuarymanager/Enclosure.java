@@ -9,7 +9,7 @@ import java.util.TreeMap;
  * It contains a group of animals.
  * An enclosure can house animals depending on their size and it's capacity.
  * All the animals of the group are of a single species.
- * If the enclosure is empty, animals of other species can be housed if needed.
+ * If the enclosure is empty, they can be repurposed to house other animals.
  * This can generate a sign, which contains details of all animals housed in this.
  */
 class Enclosure implements MultipleHousing {
@@ -18,15 +18,24 @@ class Enclosure implements MultipleHousing {
   private final int id;
   private int capacity;
   private Group group;
+  private Genus species;
 
   /**
    * Creates an enclosure object.
    * @param capacity capacity of the enclosure in area.
+   * @throws IllegalArgumentException when capacity is non positive or species is null
    */
-  public Enclosure(int capacity) {
+  public Enclosure(int capacity, Genus species) throws IllegalArgumentException {
+    if (capacity <= 0) {
+      throw new IllegalArgumentException("capacity ca not be non negative.");
+    }
+    if (species == null) {
+      throw new IllegalArgumentException("species can not be null.");
+    }
     id = count;
     count++;
     this.capacity = capacity;
+    this.species = species;
   }
 
   /**
@@ -50,10 +59,7 @@ class Enclosure implements MultipleHousing {
    * @return the current species
    */
   public Genus getCurrentSpecies() throws IllegalArgumentException {
-    if (group == null || group.isEmpty()) {
-      throw new IllegalArgumentException("Enclosure is empty");
-    }
-    return group.getSpecies();
+    return species;
   }
 
   /**
@@ -68,7 +74,7 @@ class Enclosure implements MultipleHousing {
    * generates a sign, which contains details of all animals housed in this.
    * @return Sign of this enclosure in string format.
    */
-  public String generateSign() {
+  public String generateSign() throws IllegalStateException {
     Sign sign = new Sign();
     if (isEmpty()) {
       throw new IllegalStateException("Can generate sign when there are no animals in enclosure.");
@@ -79,6 +85,19 @@ class Enclosure implements MultipleHousing {
     }
     sign.sort();
     return sign.toString();
+  }
+
+  /**
+   * Repurpose enclosure to a different species.
+   * @param species new species
+   * @throws IllegalStateException if enclosure is not empty.
+   */
+  public void repurposeEnclosure(Genus species) throws IllegalStateException {
+    if (isEmpty()) {
+      this.species = species;
+      return;
+    }
+    throw new IllegalStateException("Enclosure can be repurposed only when empty.");
   }
 
   private int getSpareCapacity() {
@@ -139,25 +158,32 @@ class Enclosure implements MultipleHousing {
     return ret;
   }
 
+  /**
+   * Flag an animal in this object that requires medical attention.
+   *
+   * @param animalId animal to be flagged.
+   * @throws IllegalArgumentException when animal does not exist in this object.
+   */
+  @Override
+  public void setNeedsMedicalAttention(int animalId) throws IllegalArgumentException {
+    getAnimal(animalId).setNeedsMedicalAttention(true);
+  }
+
   @Override
   public void addAnimal(Animal animal) throws IllegalStateException {
-    if (group == null || group.isEmpty()) {
-      group = animal.getGroup();
-    }
-    else if (group.getSpecies().compareTo(animal.getSpecies()) != 0) {
-      Genus groupSpecies = group.getSpecies();
-      Genus animalSpecies = animal.getSpecies();
-      String errorMessage = String.format("This enclosure is currently housing %s species. "
-                                          + "The given animal is of %s species",
-                                          groupSpecies.toString(), animalSpecies.toString());
-      throw new IllegalStateException(errorMessage);
-    }
-    Size animalSize = animal.getSize();
-    int requiredCapacity = animalSize == Size.LARGE ? 10 : animalSize == Size.MEDIUM ? 5 : 1;
-    if (getSpareCapacity() < requiredCapacity) {
+    if (species.compareTo(animal.getSpecies()) == 0) {
+      if (group == null) {
+        group = animal.getGroup();
+      }
+      Size animalSize = animal.getSize();
+      int requiredCapacity = animalSize == Size.LARGE ? 10 : animalSize == Size.MEDIUM ? 5 : 1;
+      if (getSpareCapacity() >= requiredCapacity) {
+        group.addAnimal(animal);
+        return;
+      }
       throw new IllegalStateException("No space for animal.");
     }
-    group.addAnimal(animal);
+    throw new IllegalStateException("Animal and Enclosure are not compatible.");
   }
 
   @Override

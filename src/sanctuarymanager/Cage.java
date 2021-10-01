@@ -54,6 +54,10 @@ class Cage implements Housing {
     return animal.getId();
   }
 
+  /**
+   * return species of animal inside the cage.
+   * @return species of animal.
+   */
   public Genus getAnimalSpecies() {
     return animal.getSpecies();
   }
@@ -68,13 +72,13 @@ class Cage implements Housing {
   }
 
   @Override
-  public Animal removeAnimal(int id) throws IllegalStateException {
+  public Animal removeAnimal(int id) throws IllegalArgumentException {
     if (isOccupied() && animal.getId() == id) {
       Animal temp = animal;
       animal = null;
       return temp;
     }
-    throw new IllegalStateException("Animal of given id does not exist in this cage.");
+    throw new IllegalArgumentException("Animal of given id does not exist in this cage.");
   }
 
   @Override

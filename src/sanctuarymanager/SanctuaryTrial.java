@@ -5,26 +5,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Simulates the jungle friends primate sanctuary.
- * Can add and remove animals.
- * Has an isolation and multiple enclosures.
- * This can generate various reports and lists.
+ * We can simulate sanctuaries using this class.
+ * This object can add isolation capacity and more enclosures.
+ * THis object can move animals from its isolation to its enclosures.
+ * This object can look up species and return a list of their housing.
  */
-public class JungleFriendsPrimateSanctuary implements Sanctuary {
+abstract class SanctuaryTrial {
 
-  private final Isolation isolation;
-  private final List<Enclosure> enclosures;
+  protected final Isolation isolation;
+  protected final List<Enclosure> enclosures;
 
-  /**
-   * creates a Jungle friends primate sanctuary object.
-   * @param isolationCapacity Capacity of isolation.
-   * @param areaOfEnclosures Capacities of enclosures.
-   * @throws IllegalArgumentException if isolation capacity is non positive
-   *        or areas and species are unbalanced.
-   */
-  public JungleFriendsPrimateSanctuary(int isolationCapacity,
-                                       List<Integer> areaOfEnclosures,
-                                       List<Genus> speciesOfEnclosures)
+  protected SanctuaryTrial(int isolationCapacity,
+                           List<Integer> areaOfEnclosures,
+                           List<Genus> speciesOfEnclosures
+  )
       throws IllegalArgumentException {
     isolation = new Isolation(isolationCapacity);
     enclosures = new ArrayList<>();
@@ -36,48 +30,135 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     }
   }
 
-  @Override
+  /**
+   * add animal by data.
+   * @param name name of the animal
+   * @param species species of the animal
+   * @param sex sex of the animal
+   * @param weight weight of the animal
+   * @param height height of the animal
+   * @param age age of the animal
+   * @param favouriteFood favourite food of the animal
+   * @param needsMedicalAttention boolean if animals needs medical attention or not.
+   * @throws IllegalStateException if any argument is invalid.
+   */
+  abstract void addAnimal(
+      String name, Genus species, Sex sex,
+      double weight, double height, int age,
+      Food favouriteFood, boolean needsMedicalAttention)
+      throws IllegalStateException;
+
+  /**
+   * removes an animal from the housing.
+   * @param id unique id of the primate to be removed.
+   * @return return the string format of primate.
+   */
+  public String removeAnimal(int id) throws IllegalStateException {
+    Animal ret;
+    try {
+      ret = isolation.removeAnimal(id);
+      return ret.toString();
+    }
+    catch (IllegalArgumentException e1) {
+      for (Enclosure k: enclosures) {
+        try {
+          ret = k.removeAnimal(id);
+          return ret.toString();
+        }
+        catch (IllegalArgumentException e2) {
+          continue;
+        }
+      }
+    }
+    throw new IllegalArgumentException("Animal not found.");
+  }
+
+  /**
+   * Get list of species of the animals inside this object sorted
+   * alphabetically along with their housing.
+   * @return Structured data representing Species and Housing.
+   */
+  public String getSpeciesAndHousing() {
+    SpeciesReport ret = isolation.getSpeciesAndHousing();
+    for (Enclosure k: enclosures) {
+      if (k.isOccupied()) {
+        ret.addAll(k.getSpeciesAndHousing());
+      }
+    }
+    ret.sort();
+    return ret.toString();
+  }
+
+  /**
+   * Get list of names of the animals inside this object sorted
+   * alphabetically along with their housing.
+   * @return Structured data representing Names and Housing.
+   */
+  public String getNameAndHousing() {
+    NameReport ret = isolation.getNameAndHousing();
+    for (Enclosure k: enclosures) {
+      if (k.isOccupied()) {
+        ret.addAll(k.getNameAndHousing());
+      }
+    }
+    ret.sort();
+    return ret.toString();
+  }
+
+  /**
+   * Get the list of items to be purchased in a tree map.
+   * @return a map with food as key and quantity as value.
+   */
+  public String getShoppingList() {
+    Map<Food, Integer> ret = isolation.getShoppingList();
+    for (Enclosure k: enclosures) {
+      if (k.isOccupied()) {
+        Map<Food, Integer> temp = k.getShoppingList();
+        for (Food f: Food.values()) {
+          ret.put(f, ret.get(f) + temp.get(f));
+        }
+      }
+    }
+    return ret.toString();
+  }
+
+  /**
+   * increases object's isolation's capacity.
+   * @param capacity capacity to be added.
+   */
   public void addIsolationCapacity(int capacity) {
     isolation.addCapacity(capacity);
   }
 
-  @Override
+  /**
+   * gets the current isolation capacity.
+   * @return current isolation capacity
+   */
   public int getTotalIsolationCapacity() {
     return isolation.getCapacity();
   }
 
-  @Override
-  public void addEnclosure(int areaOfEnclosure, Genus species) {
-    if (areaOfEnclosure <= 0) {
-      throw new IllegalArgumentException("area of Enclosure can not be non-positive");
-    }
-    if (!(species instanceof PrimateGenus)) {
-      throw new IllegalArgumentException("This is a primate sanctuary, given species "
-          + "does not belong to the primate genus.");
-    }
-    enclosures.add(new Enclosure(areaOfEnclosure, species));
-  }
+  /**
+   * adds an enclosure to this object.
+   * @param areaOfEnclosure area of enclosure to be added.
+   * @throws IllegalArgumentException when area is non positive or when species is invalid.
+   */
+  abstract void addEnclosure(int areaOfEnclosure, Genus species) throws IllegalArgumentException;
 
   /**
    * repurposes enclosure of given id to a different species.
-   *
    * @param enclosureId enclosure id
-   * @param species     new species
+   * @param species new species
    * @throws IllegalArgumentException if species or enclosure id are invalid.
    */
-  @Override
-  public void repurposeEnclosure(int enclosureId, Genus species)
-      throws IllegalArgumentException, IllegalStateException {
-    for (Enclosure k: enclosures) {
-      if (k.getId() == enclosureId) {
-        k.repurposeEnclosure(species);
-        return;
-      }
-    }
-    throw new IllegalArgumentException("No enclosure with given id.");
-  }
+  abstract void repurposeEnclosure(int enclosureId, Genus species) throws IllegalArgumentException;
 
-  @Override
+  /**
+   * look up species in the sanctuary and return a list of where ever they are housed.
+   * @param species species to be searched
+   * @return list of housing which contain the given species.
+   * @throws IllegalArgumentException when species not found in any of the sanctuaries.
+   */
   public String lookUpSpecies(Genus species) throws IllegalArgumentException {
     List<Housing> speciesHousing = isolation.lookUpSpecies(species);
     for (Enclosure k: enclosures) {
@@ -96,7 +177,10 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     return speciesHousing.toString();
   }
 
-  @Override
+  /**
+   * moves an animal from isolation to enclosure.
+   * @param animalId id of animal which is to be moved.
+   */
   public void moveAnimalToEnclosure(int animalId) {
     Animal animal;
     try {
@@ -117,12 +201,18 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     throw new IllegalStateException("No compatible enclosure or not enough space.");
   }
 
-  @Override
+  /**
+   * gives medical attention to animal with given id.
+   * @param animalId id of animal to receive medical attention
+   */
   public void giveMedicalAttention(int animalId) {
     isolation.giveMedicalAttention(animalId);
   }
 
-  @Override
+  /**
+   * moves an animal from enclosure to isolation.
+   * @param animalId id of animal which is to be moved.
+   */
   public void moveAnimalToIsolation(int animalId)
       throws IllegalArgumentException, IllegalStateException {
     for (Enclosure k: enclosures) {
@@ -141,7 +231,10 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     throw new IllegalArgumentException("Animal not found in enclosures.");
   }
 
-  @Override
+  /**
+   * flags that an animal with given id requires medical attention.
+   * @param animalId animal to be flagged.
+   */
   public void requiresMedicalAttention(int animalId) {
     try {
       isolation.setNeedsMedicalAttention(animalId);
@@ -170,12 +263,22 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     throw new IllegalArgumentException("No enclosure with id: " + id);
   }
 
-  @Override
+  /**
+   * get sign of the enclosure.
+   * @param enclosureId id of the enclosure.
+   * @return sign as a string.
+   */
   public String getEnclosureSign(int enclosureId) {
     return getEnclosure(enclosureId).generateSign();
   }
 
-  @Override
+  /**
+   * <b>This will be used in testing.</b>
+   * Get the details of an animal with given id from this object.
+   * @param id id of the animal whose details are being requested.
+   * @return string representation of animal.
+   * @throws IllegalStateException when the animal does not exist in this object.
+   */
   public String getAnimal(int id) throws IllegalArgumentException {
     Animal ret;
     try {
@@ -196,27 +299,12 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     throw new IllegalArgumentException("Animal not found.");
   }
 
-  private Animal getAnimalObject(int id) throws IllegalArgumentException {
-    Animal ret;
-    try {
-      ret = isolation.getAnimal(id);
-      return ret;
-    }
-    catch (IllegalArgumentException e1) {
-      for (Enclosure k: enclosures) {
-        try {
-          ret = k.getAnimal(id);
-          return ret;
-        }
-        catch (IllegalArgumentException e2) {
-          continue;
-        }
-      }
-    }
-    throw new IllegalArgumentException("Animal not found.");
-  }
-
-  @Override
+  /**
+   * <b>This will be used in testing.</b>
+   * <b>This has to be removed in real implementation.</b>
+   * returns list of all animals inside sanctuary.
+   * @return list of all animals in the sanctuary.
+   */
   public List<Animal> getAnimals() {
     List<Animal> ret = isolation.getAnimals();
     for (Enclosure k: enclosures) {
@@ -230,7 +318,14 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     return ret;
   }
 
-  @Override
+  /**
+   * <b>This will be used in testing.</b>
+   * <b>This has to be removed in real implementation.</b>
+   * returns housing of the given animal.
+   * @param animalId id of the animal.
+   * @return housing of the animal.
+   * @throws IllegalArgumentException if animal does not exist in our system.
+   */
   public Housing getHousing(int animalId) throws IllegalArgumentException {
     Housing housing;
     try {
@@ -252,7 +347,11 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     throw new IllegalArgumentException("Animal not in sanctuary.");
   }
 
-  @Override
+  /**
+   * <b>This will be used in testing.</b>
+   * <b>This has to be removed in real implementation.</b>
+   * @return list of ids of enclosures in this sanctuary.
+   */
   public List<Integer> getEnclosureIds() {
     List<Integer> ret = new ArrayList<Integer>();
     for (Enclosure k: enclosures) {
@@ -261,83 +360,17 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     return ret;
   }
 
-  @Override
-  public String getSpeciesAndHousing() {
-    SpeciesReport ret = isolation.getSpeciesAndHousing();
-    for (Enclosure k: enclosures) {
-      if (k.isOccupied()) {
-        ret.addAll(k.getSpeciesAndHousing());
-      }
-    }
-    ret.sort();
-    return ret.toString();
-  }
-
-  @Override
-  public String getNameAndHousing() {
-    NameReport ret = isolation.getNameAndHousing();
-    for (Enclosure k: enclosures) {
-      if (k.isOccupied()) {
-        ret.addAll(k.getNameAndHousing());
-      }
-    }
-    ret.sort();
-    return ret.toString();
-  }
-
-  @Override
-  public String getShoppingList() {
-    Map<Food, Integer> ret = isolation.getShoppingList();
-    for (Enclosure k: enclosures) {
-      if (k.isOccupied()) {
-        Map<Food, Integer> temp = k.getShoppingList();
-        for (Food f: Food.values()) {
-          ret.put(f, ret.get(f) + temp.get(f));
-        }
-      }
-    }
-    return ret.toString();
-  }
-
-  private void addAnimal(Animal animal) throws IllegalArgumentException {
-    if (animal instanceof Primate) {
-      isolation.addAnimal(animal);
-      return;
-    }
-    throw new IllegalArgumentException("This is a primate sanctuary. Given animal is a "
-        +animal.getSpecies().getGenus());
-  }
-
-  @Override
-  public void addAnimal(String name, Genus species, Sex sex,
-                        double weight, double height, int age,
-                        Food favouriteFood, boolean needsMedicalAttention)
-      throws IllegalStateException {
-    if (!(species instanceof PrimateGenus)) {
-      String errorMessage;
-      errorMessage = "This is a primate sanctuary, can not add "
-          + name + " as it is a " + species.getGenus() + "\n";
-      throw new IllegalArgumentException(errorMessage);
-    }
-    isolation.addAnimal(
-        new Primate(name, (PrimateGenus) species,
-            sex, weight, height, age,
-            favouriteFood, needsMedicalAttention)
-    );
-  }
-
-  @Override
-  public String removeAnimal(int id) throws IllegalStateException {
+  private Animal getAnimalObject(int id) throws IllegalArgumentException {
     Animal ret;
     try {
-      ret = isolation.removeAnimal(id);
-      return ret.toString();
+      ret = isolation.getAnimal(id);
+      return ret;
     }
     catch (IllegalArgumentException e1) {
       for (Enclosure k: enclosures) {
         try {
-          ret = k.removeAnimal(id);
-          return ret.toString();
+          ret = k.getAnimal(id);
+          return ret;
         }
         catch (IllegalArgumentException e2) {
           continue;
@@ -379,19 +412,7 @@ public class JungleFriendsPrimateSanctuary implements Sanctuary {
     return removeAnimalGiveObject(id);
   }
 
-  /**
-   * this method can be used by partners to transfer animals to us.
-   * @param animal animal that is being transferred.
-   */
-  public void receiveAnimalFromPartnerSanctuary(Animal animal) {
-    if (animal == null) {
-      throw new IllegalArgumentException("animal can not be null.");
-    }
-    if (animal.getNeedsMedicalAttention()) {
-      throw new IllegalArgumentException("Can not receive sick animal.");
-    }
-    addAnimal(animal.shallowCopy());
-  }
+  abstract public void receiveAnimalFromPartnerSanctuary(Animal animal);
 
   @Override
   public String toString() {

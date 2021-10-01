@@ -9,12 +9,6 @@ import java.util.List;
  * This object can look up species and return a list of their housing.
  */
 interface Sanctuary {
-  /**
-   * add animal by object.
-   * @param animal animal object to be added
-   * @throws IllegalArgumentException if input is not of correct type.
-   */
-  public void addAnimal(Animal animal) throws IllegalArgumentException;
 
   /**
    * add animal by data.
@@ -28,7 +22,7 @@ interface Sanctuary {
    * @param needsMedicalAttention boolean if animals needs medical attention or not.
    * @throws IllegalStateException if any argument is invalid.
    */
-  public void addAnimal(
+  void addAnimal(
       String name, Genus species, Sex sex,
       double weight, double height, int age,
       Food favouriteFood, boolean needsMedicalAttention)
@@ -39,89 +33,92 @@ interface Sanctuary {
    * @param id unique id of the primate to be removed.
    * @return return the string format of primate.
    */
-  public String removeAnimal(int id) throws IllegalArgumentException;
+  String removeAnimal(int id) throws IllegalArgumentException;
 
   /**
    * Get list of species of the animals inside this object sorted
    * alphabetically along with their housing.
    * @return Structured data representing Species and Housing.
    */
-  public String getSpeciesAndHousing();
+  String getSpeciesAndHousing();
 
   /**
    * Get list of names of the animals inside this object sorted
    * alphabetically along with their housing.
    * @return Structured data representing Names and Housing.
    */
-  public String getNameAndHousing();
+  String getNameAndHousing();
 
   /**
    * Get the list of items to be purchased in a tree map.
    * @return a map with food as key and quantity as value.
    */
-  public String getShoppingList();
+  String getShoppingList();
 
   /**
    * increases object's isolation's capacity.
    * @param capacity capacity to be added.
    */
-  public void addIsolationCapacity(int capacity);
+  void addIsolationCapacity(int capacity);
 
   /**
    * gets the current isolation capacity.
    * @return current isolation capacity
    */
-  public int getTotalIsolationCapacity();
+  int getTotalIsolationCapacity();
 
   /**
    * adds an enclosure to this object.
    * @param areaOfEnclosure area of enclosure to be added.
+   * @throws IllegalArgumentException when area is non positive or when species is invalid.
    */
-  public void addEnclosure(int areaOfEnclosure);
+  void addEnclosure(int areaOfEnclosure, Genus species) throws IllegalArgumentException;
 
   /**
-   * adds an enclosure to this object.
-   * @param enclosure enclosure object to be added.
+   * repurposes enclosure of given id to a different species.
+   * @param enclosureId enclosure id
+   * @param species new species
+   * @throws IllegalArgumentException if species or enclosure id are invalid.
    */
-  public void addEnclosure(Enclosure enclosure);
+  void repurposeEnclosure(int enclosureId, Genus species) throws IllegalArgumentException;
 
   /**
    * look up species in the sanctuary and return a list of where ever they are housed.
    * @param species species to be searched
-   * @return list of housing which contain the given species.
+   * @return string format of the list of housing which contain the given species.
    */
-  public List<Housing> lookUpSpecies(Genus species);
+  String lookUpSpecies(Genus species);
 
   /**
    * moves an animal from isolation to enclosure.
    * @param animalId id of animal which is to be moved.
    */
-  public void moveAnimalToEnclosure(int animalId);
+  void moveAnimalToEnclosure(int animalId);
 
   /**
    * gives medical attention to animal with given id.
    * @param animalId id of animal to receive medical attention
    */
-  public void giveMedicalAttention(int animalId);
+  void giveMedicalAttention(int animalId);
 
   /**
    * moves an animal from enclosure to isolation.
    * @param animalId id of animal which is to be moved.
    */
-  public void moveAnimalToIsolation(int animalId);
+  void moveAnimalToIsolation(int animalId);
 
   /**
-   * flags that given animal requires medical attention, moves animal to isolation if possible.
+   * flags that an animal with given id requires medical attention.
    * @param animalId animal to be flagged.
    */
-  public void requiresMedicalAttention(int animalId);
+  void requiresMedicalAttention(int animalId);
 
   /**
    * get sign of the enclosure.
    * @param enclosureId id of the enclosure.
    * @return sign as a string.
    */
-  public String getEnclosureSign(int enclosureId);
+  String getEnclosureSign(int enclosureId);
 
   /**
    * <b>This will be used in testing.</b>
@@ -130,7 +127,7 @@ interface Sanctuary {
    * @return string representation of animal.
    * @throws IllegalStateException when the animal does not exist in this object.
    */
-  public String getAnimal(int id) throws IllegalArgumentException;
+  String getAnimal(int id) throws IllegalArgumentException;
 
   /**
    * <b>This will be used in testing.</b>
@@ -138,7 +135,7 @@ interface Sanctuary {
    * returns list of all animals inside sanctuary.
    * @return list of all animals in the sanctuary.
    */
-  public List<Animal> getAnimals();
+  List<Animal> getAnimals();
 
   /**
    * <b>This will be used in testing.</b>
@@ -148,12 +145,12 @@ interface Sanctuary {
    * @return housing of the animal.
    * @throws IllegalArgumentException if animal does not exist in our system.
    */
-  public Housing getHousing(int animalId) throws IllegalArgumentException;
+  Housing getHousing(int animalId) throws IllegalArgumentException;
 
   /**
    * <b>This will be used in testing.</b>
    * <b>This has to be removed in real implementation.</b>
    * @return list of ids of enclosures in this sanctuary.
    */
-  public List<Integer> getEnclosureIds();
+  List<Integer> getEnclosureIds();
 }

@@ -7,20 +7,19 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Test suite for JungleFriendsPrimateSanctuary.
- */
-public class JungleFriendsPrimateSanctuaryTest {
+import static org.junit.Assert.*;
 
-  private JungleFriendsPrimateSanctuary sampleA;
-  private JungleFriendsPrimateSanctuary sampleB;
-  private JungleFriendsPrimateSanctuary sampleC;
-  private JungleFriendsPrimateSanctuary sampleD;
-  private JungleFriendsPrimateSanctuary sampleE;
-  private JungleFriendsPrimateSanctuary sampleF;
-  private JungleFriendsPrimateSanctuary sampleG;
-  private JungleFriendsPrimateSanctuary sampleH;
-  private JungleFriendsPrimateSanctuary sampleI;
+public class PrimateSanctuaryTest {
+
+  private PrimateSanctuary sampleA;
+  private PrimateSanctuary sampleB;
+  private PrimateSanctuary sampleC;
+  private PrimateSanctuary sampleD;
+  private PrimateSanctuary sampleE;
+  private PrimateSanctuary sampleF;
+  private PrimateSanctuary sampleG;
+  private PrimateSanctuary sampleH;
+  private PrimateSanctuary sampleI;
 
   /**
    * setup for tests.
@@ -28,7 +27,7 @@ public class JungleFriendsPrimateSanctuaryTest {
   @Before
   public void setUp() {
     //regular case
-    sampleA = new JungleFriendsPrimateSanctuary(20,
+    sampleA = new PrimateSanctuary(20,
         Arrays.asList(16, 200, 150),
         Arrays.asList(new Drill(), new Tamarin(), new Mangabey()));
     sampleA.addAnimal("Dheeraj1", new Tamarin(), Sex.MALE, 15.6, 14, 8, Food.EGGS, false);
@@ -39,13 +38,13 @@ public class JungleFriendsPrimateSanctuaryTest {
     sampleA.addAnimal("Dheeraj6", new Tamarin(), Sex.FEMALE, 14.9, 9, 7, Food.FRUITS, false);
 
     //For move to enclosure, animal is sick, so should not allow movement
-    sampleB = new JungleFriendsPrimateSanctuary(20,
+    sampleB = new PrimateSanctuary(20,
         Arrays.asList(16, 200, 150),
         Arrays.asList(new Drill(), new Tamarin(), new Mangabey()));
     sampleB.addAnimal("Dheeraj1", new Tamarin(), Sex.MALE, 15.6, 14, 8, Food.EGGS, true);
 
     //For move to isolation
-    sampleC = new JungleFriendsPrimateSanctuary(20,
+    sampleC = new PrimateSanctuary(20,
         Arrays.asList(16, 200, 150),
         Arrays.asList(new Drill(), new Tamarin(), new Mangabey()));
     sampleC.addAnimal("Dheeraj1", new Tamarin(), Sex.MALE, 15.6, 14, 8, Food.EGGS, false);
@@ -53,7 +52,7 @@ public class JungleFriendsPrimateSanctuaryTest {
     sampleC.moveAnimalToEnclosure(animalId_c_1);
 
     //Full Isolation, for move to isolation
-    sampleD = new JungleFriendsPrimateSanctuary(2,
+    sampleD = new PrimateSanctuary(2,
         Arrays.asList(16, 200, 150),
         Arrays.asList(new Drill(), new Tamarin(), new Mangabey()));
     sampleD.addAnimal("Dheeraj1", new Tamarin(), Sex.MALE, 15.6, 14, 8, Food.EGGS, false);
@@ -63,7 +62,7 @@ public class JungleFriendsPrimateSanctuaryTest {
     sampleD.addAnimal("Dheeraj3", new Tamarin(), Sex.MALE, 11.3, 10, 7, Food.NUTS, true);
 
     //No space in enclosures
-    sampleE = new JungleFriendsPrimateSanctuary(2,
+    sampleE = new PrimateSanctuary(2,
         Arrays.asList(10, 10),
         Arrays.asList(new Drill(), new Tamarin()));
     sampleE.addAnimal("Dheeraj1", new Tamarin(), Sex.MALE, 15.6, 21, 8, Food.EGGS, false);
@@ -75,7 +74,7 @@ public class JungleFriendsPrimateSanctuaryTest {
     sampleE.addAnimal("Dheeraj3", new Tamarin(), Sex.MALE, 11.3, 10, 7, Food.NUTS, false);
 
     //Enclosure sign
-    sampleF = new JungleFriendsPrimateSanctuary(20,
+    sampleF = new PrimateSanctuary(20,
         Arrays.asList(100, 200, 150),
         Arrays.asList(new Drill(), new Tamarin(), new Mangabey()));
     sampleF.addAnimal("Dheeraj1", new Tamarin(), Sex.MALE, 15.6, 14, 8, Food.EGGS, false);
@@ -97,7 +96,7 @@ public class JungleFriendsPrimateSanctuaryTest {
     sampleF.moveAnimalToEnclosure(animalId_f_5);
     sampleF.moveAnimalToEnclosure(animalId_f_6);
 
-    sampleG = new JungleFriendsPrimateSanctuary(20,
+    sampleG = new PrimateSanctuary(20,
         Arrays.asList(100, 200, 150, 200, 150),
         Arrays.asList(new Drill(), new Tamarin(), new Squirrel(), new Spider(), new Mangabey()));
     sampleG.addAnimal("Dheeraj1", new Tamarin(), Sex.MALE, 15.6, 14, 8, Food.EGGS, false);
@@ -112,7 +111,7 @@ public class JungleFriendsPrimateSanctuaryTest {
     sampleG.addAnimal("Dheeraj10", new Squirrel(), Sex.FEMALE, 13.7, 9, 9, Food.LEAVES, false);
 
     //For repurpose enclosure
-    sampleH = new JungleFriendsPrimateSanctuary(20,
+    sampleH = new PrimateSanctuary(20,
         Arrays.asList(20),
         Arrays.asList(new Drill()));
     sampleH.addAnimal("Dheeraj1", new Mangabey(), Sex.MALE, 15.6, 14, 8, Food.EGGS, false);
@@ -123,7 +122,7 @@ public class JungleFriendsPrimateSanctuaryTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testConstructor_1() {
-    new JungleFriendsPrimateSanctuary(-10, Arrays.asList(10), Arrays.asList(new Mangabey()));
+    new PrimateSanctuary(-10, Arrays.asList(10), Arrays.asList(new Mangabey()));
   }
 
   /**
@@ -131,7 +130,7 @@ public class JungleFriendsPrimateSanctuaryTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testConstructor_2() {
-    new JungleFriendsPrimateSanctuary(10,
+    new PrimateSanctuary(10,
         Arrays.asList(-10, 10),
         Arrays.asList(new Mangabey(), new Tamarin()));
   }
@@ -141,7 +140,7 @@ public class JungleFriendsPrimateSanctuaryTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testConstructor_3() {
-    new JungleFriendsPrimateSanctuary(10,
+    new PrimateSanctuary(10,
         Arrays.asList(20, 10),
         Arrays.asList(null, new Tamarin()));
   }
@@ -151,7 +150,7 @@ public class JungleFriendsPrimateSanctuaryTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testConstructor_4() {
-    new JungleFriendsPrimateSanctuary(10,
+    new PrimateSanctuary(10,
         Arrays.asList(20),
         Arrays.asList(new Spider(), new Tamarin()));
   }
@@ -180,7 +179,7 @@ public class JungleFriendsPrimateSanctuaryTest {
   public void testAddIsolationCapacity_3() {
     sampleA.addIsolationCapacity(-10);
   }
-  
+
   /**
    * Test if addEnclosure works.
    */
@@ -215,10 +214,10 @@ public class JungleFriendsPrimateSanctuaryTest {
     List<Animal> animals = sampleA.getAnimals();
     String expected =
         "[" + sampleA.getHousing(animals.get(0).getId()).toString()
-        + ", " + sampleA.getHousing(animals.get(2).getId()).toString()
-        + ", " + sampleA.getHousing(animals.get(4).getId()).toString()
-        + ", " + sampleA.getHousing(animals.get(5).getId()).toString()
-        + "]";
+            + ", " + sampleA.getHousing(animals.get(2).getId()).toString()
+            + ", " + sampleA.getHousing(animals.get(4).getId()).toString()
+            + ", " + sampleA.getHousing(animals.get(5).getId()).toString()
+            + "]";
     Assert.assertEquals(expected, housings);
   }
 

@@ -16,31 +16,39 @@ interface MultipleHousing extends Housing {
    * @return an Animal object.
    * @throws IllegalStateException when the animal does not exist in this object.
    */
-  public Animal getAnimal(int id) throws IllegalArgumentException;
+  Animal getAnimal(int id) throws IllegalArgumentException;
 
   /**
+   * <b>This method was written for testing purposes</b>
    * Get list of all animals in this isolation.
    * @return list of all animals in this isolation.
    */
-  public List<Animal> getAnimals();
+  List<Animal> getAnimals();
 
   /**
    * Get list of species of the animals inside this object sorted
    * alphabetically along with their housing.
    * @return Structured data representing Species and Housing.
    */
-  public SpeciesReport getSpeciesAndHousing();
+  SpeciesReport getSpeciesAndHousing();
 
   /**
    * Get list of names of the animals inside this object sorted
    * alphabetically along with their housing.
    * @return Structured data representing Names and Housing.
    */
-  public NameReport getNameAndHousing();
+  NameReport getNameAndHousing();
 
   /**
    * Get the list of items to be purchased in a tree map.
    * @return a map with food as key and quantity as value.
    */
-  public Map<Food, Integer> getShoppingList();
+  Map<Food, Integer> getShoppingList();
+
+  /**
+   * Flag an animal in this object that requires medical attention.
+   * @param animalId animal to be flagged.
+   * @throws IllegalArgumentException when animal does not exist in this object.
+   */
+  void setNeedsMedicalAttention(int animalId) throws IllegalArgumentException;
 }
