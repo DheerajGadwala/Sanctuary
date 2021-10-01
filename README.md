@@ -78,3 +78,4 @@ In this project we use the principles of object oriented programming to implemen
 
 ### 9. Citations:
 ###### [Genus Wiki](https://en.wikipedia.org/wiki/Genus)
+###### [Effective Java](https://learning.oreilly.com/library/view/effective-java/9780134686097/)
