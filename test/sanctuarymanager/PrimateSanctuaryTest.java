@@ -7,8 +7,9 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test suite for the Primate Sanctuary class.
+ */
 public class PrimateSanctuaryTest {
 
   private PrimateSanctuary sampleA;
@@ -115,6 +116,11 @@ public class PrimateSanctuaryTest {
         Arrays.asList(20),
         Arrays.asList(new Drill()));
     sampleH.addAnimal("Dheeraj1", new Mangabey(), Sex.MALE, 15.6, 14, 8, Food.EGGS, false);
+
+    // Empty Sanctuary
+    sampleI = new PrimateSanctuary(20,
+        Arrays.asList(100, 200, 150),
+        Arrays.asList(new Drill(), new Tamarin(), new Mangabey()));
   }
 
   /**
@@ -224,7 +230,7 @@ public class PrimateSanctuaryTest {
   /**
    * Test if lookUpSpecies throws error when asked for species not in the sanctuary.
    */
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = IllegalStateException.class)
   public void testLookUpSpecies_2() {
     sampleA.lookUpSpecies(new Spider());
   }
@@ -308,7 +314,7 @@ public class PrimateSanctuaryTest {
   /**
    * Should throw error when animal not found in enclosures.
    */
-  @Test (expected = IllegalArgumentException.class)
+  @Test (expected = IllegalStateException.class)
   public void testMoveAnimalToIsolation_2() {
     sampleD.moveAnimalToIsolation(86758);
   }
@@ -378,7 +384,7 @@ public class PrimateSanctuaryTest {
   /**
    * test if get animal throws exception when animal does not exist in sanctuary.
    */
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = IllegalStateException.class)
   public void testGetAnimal_1() {
     sampleA.getAnimal(100000);
   }
@@ -503,7 +509,8 @@ public class PrimateSanctuaryTest {
 
   /**
    * test if repurposeEnclosure works as expected.
-   * repurposed enclosure to mangabey and added a mangabey.
+   * repurposed enclosure for mangabeys and added a mangabey.
+   * There is only one enclosure in sampleH.
    */
   @Test
   public void testRepurposeEnclosure_1() {
@@ -511,6 +518,7 @@ public class PrimateSanctuaryTest {
     sampleH.repurposeEnclosure(enclosureId, new Mangabey());
     int animalId = sampleH.getAnimals().get(0).getId();
     sampleH.moveAnimalToEnclosure(animalId);
+    Assert.assertTrue(sampleH.getHousing(animalId) instanceof Enclosure);
   }
 
   /**
@@ -523,11 +531,19 @@ public class PrimateSanctuaryTest {
 
   /**
    * Test if transferAnimalToPartnerSanctuary returns the animal object to be transferred.
+   * sampleI is an empty sanctuary. [no animals]
    */
   @Test
   public void testTransferAnimalToPartnerSanctuary_1() {
     Animal animal = sampleA.getAnimals().get(0);
-    Assert.assertEquals(animal, sampleA.transferAnimalToPartnerSanctuary(animal.getId()));
+    sampleA.transferAnimalToPartnerSanctuary(animal.getId(), sampleI);
+    Animal sentAnimal = sampleI.getAnimals().get(0);
+    // can not implement equals on animals because all animals have unique ids.
+    // There might be a chance that two monkeys have exactly the same values.
+    // Transfer monkey method sends a shallow copy,
+    // therefore creates a new object with a new id.
+    // getDetails gets string representation of object without id.
+    Assert.assertTrue( animal.getDetails().equals( sentAnimal.getDetails()));
   }
 
   /**
@@ -536,7 +552,7 @@ public class PrimateSanctuaryTest {
   @Test(expected = IllegalStateException.class)
   public void testTransferAnimalToPartnerSanctuary_2() {
     Animal animal = sampleA.getAnimals().get(2);
-    sampleA.transferAnimalToPartnerSanctuary(animal.getId());
+    sampleA.transferAnimalToPartnerSanctuary(animal.getId(), sampleI);
   }
 
   /**
@@ -544,7 +560,17 @@ public class PrimateSanctuaryTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testTransferAnimalToPartnerSanctuary_3() {
-    sampleA.transferAnimalToPartnerSanctuary(123123123);
+    sampleA.transferAnimalToPartnerSanctuary(123123123, sampleI);
+  }
+
+  /**
+   * Test if transferAnimalToPartnerSanctuary throws error
+   * when partner has insufficient capacity in isolation.
+   */
+  @Test(expected = IllegalStateException.class)
+  public void testTransferAnimalToPartnerSanctuary_4() {
+    Animal animal = sampleA.getAnimals().get(2);
+    sampleA.transferAnimalToPartnerSanctuary(animal.getId(), sampleD);
   }
 
   /**

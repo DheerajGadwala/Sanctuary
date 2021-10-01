@@ -196,6 +196,19 @@ class Primate implements Animal {
   }
 
   @Override
+  public String getDetails() {
+    String ret = String.format(
+        "species: %s,\n sex: %s,\n name: %s,"
+            + "\n size: %s,\n age: %d,\n weight: %.2f,"
+            + "\n favourite food: %s\n",
+        species.toString(), sex.toString(),name,
+        size.toString(), age, weight,
+        favouriteFood.toString()
+    );
+    return ret;
+  }
+
+  @Override
   public Primate shallowCopy() throws IllegalArgumentException {
     return new Primate(
         getName(),

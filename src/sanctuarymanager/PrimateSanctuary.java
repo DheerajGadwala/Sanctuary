@@ -6,8 +6,18 @@ import java.util.List;
  * Primate sanctuary
  * Primate sanctuary can only add animals which are an instance of Primate.
  */
-public class PrimateSanctuary extends SanctuaryTrial {
-  PrimateSanctuary(
+public class PrimateSanctuary extends Sanctuary {
+  /**
+   * Primate sanctuary is a type of sanctuary that houses only primates.
+   * Add animals that are instances of primates
+   * Enclosures can be repurposed only to suit the primate genus.
+   * @param isolationCapacity number of cages in isolation.
+   * @param areaOfEnclosures area of enclosures.
+   * @param speciesOfEnclosures default species for each enclosure.
+   * @throws IllegalArgumentException when species do not belong to the primate genus or
+   *                                   when other inputs are invalid
+   */
+  public PrimateSanctuary(
       int isolationCapacity,
       List<Integer> areaOfEnclosures,
       List<Genus> speciesOfEnclosures
@@ -22,7 +32,7 @@ public class PrimateSanctuary extends SanctuaryTrial {
     }
   }
 
-  private void addAnimal(Animal animal) throws IllegalArgumentException {
+  private void addAnimal(Animal animal) throws IllegalArgumentException, IllegalStateException {
     if (animal instanceof Primate) {
       isolation.addAnimal(animal);
       return;
@@ -100,9 +110,13 @@ public class PrimateSanctuary extends SanctuaryTrial {
   }
 
   @Override
-  public void receiveAnimalFromPartnerSanctuary(Animal animal) {
+  void receiveAnimalFromPartnerSanctuary(Animal animal)
+      throws IllegalArgumentException, IllegalStateException {
     if (animal == null) {
       throw new IllegalArgumentException("animal can not be null.");
+    }
+    if (!(animal instanceof Primate)) {
+      throw new IllegalStateException("This is a primate sanctuary and can receive only primates.");
     }
     if (animal.getNeedsMedicalAttention()) {
       throw new IllegalArgumentException("Can not receive sick animal.");

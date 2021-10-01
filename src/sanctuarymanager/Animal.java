@@ -129,6 +129,13 @@ interface Animal {
   Group getGroup();
 
   /**
+   * <b>This method is written for testing purposes.</b>
+   * String representation of object without id.
+   * @return string representation of this without id.
+   */
+  String getDetails();
+
+  /**
    * returns a shallow copy of this animal.
    * @return shallow copy.
    * @throws IllegalArgumentException when animal is null.
