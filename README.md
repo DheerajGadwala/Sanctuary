@@ -36,7 +36,10 @@ In this project we use the principles of object oriented programming to implemen
 ### 3. How to run:
   * the jar file is a simple test run.
 
-### 4. Description of examples:
+### 4. How to use the program:
+  * Not interactive, just run.
+
+### 5. Description of examples:
     Constructing a Primate Sanctuary:
     
     PrimateSanctuary sample = new PrimateSanctuary(20, Arrays.asList(16, 200, 150), Arrays.asList(new Drill(), new Tamarin(), new Mangabey()));
