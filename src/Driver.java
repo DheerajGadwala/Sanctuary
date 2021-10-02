@@ -60,9 +60,11 @@ public class Driver {
     jfps.repurposeEnclosure(3, new Guereza()); // repurpose Enclosure
 
     jfps.addAnimal("Dheeraj Gadwala", new Howler(), Sex.FEMALE, 14.9, 14, 7, Food.FRUITS, false);
+    // add animal
 
+    System.out.println("remove animal: \n" + jfps.removeAnimal(4) + "\n"); //remove animal
 
-    System.out.println("get animal: \n" + jfps.getAnimal(3));
+    System.out.println("get animal: \n" + jfps.getAnimal(3)); // getAnimal
     // get animal, returns string format of animal.
     // Animal is package private and can not be accessed from the driver.
 

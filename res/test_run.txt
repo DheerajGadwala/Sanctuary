@@ -1,0 +1,69 @@
+D:\softwares\openjdk-14\bin\java.exe -Dfile.encoding=windows-1252 -jar D:\NEU\PDP\PDP_Project_01\out\artifacts\PDP_Project_01_jar\PDP_Project_01.jar
+get animal: 
+id: 3, species: Mangabey,
+ sex: male,
+ name: Agnes Conrad,
+ size: medium,
+ age: 9,
+ weight: 19.10,
+ favourite food: tree sap
+
+sign of enclosure 0: 
+Name: Emanuel Armstrong, Sex: female, Favourite food: nuts
+
+sign of enclosure 1: 
+Name: Fiza Muir, Sex: male, Favourite food: nuts
+Name: Suhail Daly, Sex: female, Favourite food: eggs
+
+Look up species Tamarin: 
+[Cage id:- 1, Cage id:- 5, Enclosure id:- 1]
+
+try looking for saki species: 
+java.lang.IllegalStateException: No Saki in this sanctuary.
+No Saki in sanctuary, therefore throws an error.
+
+Species Report: 
+Species: Drill, Housing: Enclosure id:- 0
+Species: Howler, Housing: Cage id:- 0
+Species: Mangabey, Housing: Cage id:- 3
+Species: Tamarin, Housing: Cage id:- 1
+Species: Tamarin, Housing: Cage id:- 5
+Species: Tamarin, Housing: Enclosure id:- 1
+Species: Tamarin, Housing: Enclosure id:- 1
+
+Names Report: 
+Name: Agnes Conrad, Housing: Cage id:- 3
+Name: Dheeraj Gadwala, Housing: Cage id:- 0
+Name: Emanuel Armstrong, Housing: Enclosure id:- 0
+Name: Emilie Merrill, Housing: Cage id:- 1
+Name: Fiza Muir, Housing: Enclosure id:- 1
+Name: Reegan Prentice, Housing: Cage id:- 5
+Name: Suhail Daly, Housing: Enclosure id:- 1
+
+Shopping List: 
+{eggs=750, fruits=350, insects=0, leaves=0, nuts=350, seeds=0, tree sap=250}
+
+Transfer animal to partner: 
+animal in jfps: 
+id: 2, species: Tamarin,
+ sex: male,
+ name: Fiza Muir,
+ size: medium,
+ age: 7,
+ weight: 11.30,
+ favourite food: nuts
+
+animal in partner: 
+id: 7, species: Tamarin,
+ sex: male,
+ name: Fiza Muir,
+ size: medium,
+ age: 7,
+ weight: 11.30,
+ favourite food: nuts
+
+try looking for the moved animal: 
+java.lang.IllegalStateException: Animal not found.
+Animal moved to partner, therefore not in jfps.
+
+Process finished with exit code 0

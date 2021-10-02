@@ -7,6 +7,7 @@ import java.util.Map;
  * This interface represents housing objects that can house more than one animal.
  * Since they house multiple animals they can produce lists like species and housing,
  * names and housing and shopping lists.
+ * We can also look up for a certain species.
  */
 interface MultipleHousing extends Housing {
 

@@ -58,7 +58,7 @@ class Enclosure implements MultipleHousing {
    * return the species currently being housed in the enclosure.
    * @return the current species
    */
-  public Genus getCurrentSpecies() throws IllegalArgumentException {
+  public Genus getCurrentSpecies() {
     return species;
   }
 
@@ -73,6 +73,7 @@ class Enclosure implements MultipleHousing {
   /**
    * generates a sign, which contains details of all animals housed in this.
    * @return Sign of this enclosure in string format.
+   * @throws IllegalStateException when there are no animals in the enclosure.
    */
   public String generateSign() throws IllegalStateException {
     Sign sign = new Sign();
@@ -158,12 +159,6 @@ class Enclosure implements MultipleHousing {
     return ret;
   }
 
-  /**
-   * Flag an animal in this object that requires medical attention.
-   *
-   * @param animalId animal to be flagged.
-   * @throws IllegalArgumentException when animal does not exist in this object.
-   */
   @Override
   public void setNeedsMedicalAttention(int animalId) throws IllegalArgumentException {
     getAnimal(animalId).setNeedsMedicalAttention(true);

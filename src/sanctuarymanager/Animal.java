@@ -2,6 +2,10 @@ package sanctuarymanager;
 
 /**
  * Simulates an animal.
+ * An animal is assigned an id.
+ * It has a name, species, sex, weight, height, age and food.
+ * Additionally, we can find out it's current health condition,
+ * [if it needs any medical attention or not].
  */
 interface Animal {
 
@@ -12,8 +16,8 @@ interface Animal {
   int getId();
 
   /**
-   * getter method for sanctuarymanagement.species of the animal.
-   * @return sanctuarymanagement.species of the animal.
+   * getter method for species of the animal.
+   * @return species of the animal.
    */
   Genus getSpecies();
 

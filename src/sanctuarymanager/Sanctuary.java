@@ -9,6 +9,10 @@ import java.util.Map;
  * This object can add isolation capacity and more enclosures.
  * THis object can move animals from its isolation to its enclosures.
  * This object can look up species and return a list of their housing.
+ * This object can generate alphabetically ordered lists of species along with their housing.
+ * This object can generate alphabetically ordered lists of names of animals along with
+ * their housing.
+ * This can transfer its animals to other sanctuaries.
  */
 abstract class Sanctuary {
 

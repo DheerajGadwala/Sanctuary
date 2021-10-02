@@ -3,8 +3,10 @@ package sanctuarymanager;
 import java.util.List;
 
 /**
- * Primate sanctuary
+ * Primate sanctuary is a type of sanctuary.
  * Primate sanctuary can only add animals which are an instance of Primate.
+ * They can have enclosures that are specifically designed for the primate genus.
+ * Their enclosures can be repurposed for the various species of the primate genus.
  */
 public class PrimateSanctuary extends Sanctuary {
   /**
